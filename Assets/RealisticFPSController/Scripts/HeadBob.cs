@@ -18,7 +18,7 @@ namespace EvolveGames
         [SerializeField, Range(40f, 4f)] float RoationMovementSmooth = 10.0f;
         [SerializeField, Range(1f, 10f)] float RoationMovementAmount = 3.0f;
 
-        float ToggleSpeed = 3.0f;
+        float ToggleSpeed = 1.0f;
         Vector3 StartPos;
         Vector3 StartRot;
         Vector3 FinalRot;
@@ -55,7 +55,7 @@ namespace EvolveGames
         {
             Vector3 pos = Vector3.zero;
             pos.y += Mathf.Lerp(pos.y, Mathf.Sin(Time.time * Frequency) * Amount * 1.4f, Smooth * Time.deltaTime);
-            pos.x += Mathf.Lerp(pos.x, Mathf.Cos(Time.time * Frequency / 2f) * Amount * 1.6f, Smooth * Time.deltaTime);
+            //pos.x += Mathf.Lerp(pos.x, Mathf.Cos(Time.time * Frequency / 2f) * Amount * 1.6f, Smooth * Time.deltaTime);
             return pos;
         }
 
