@@ -57677,6 +57677,7 @@ MonoBehaviour:
   spawnHeight: 20
   spawnRadius: 10
   maxAttempts: 50
+  numberOfObjectsToSpawn: 10
 --- !u!4 &1542798110
 Transform:
   m_ObjectHideFlags: 0
@@ -81258,7 +81259,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4518973063443930718
 Transform:
   m_ObjectHideFlags: 0
