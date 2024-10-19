@@ -9,7 +9,7 @@
 
 2. **Техническая сложность**: Низкая. Подключение системы крайне простое, весь код легко читается, имеется документация.
 
-   - **Взаимодействие с физикой автомобиля**: Требуется использование RVOController.
+   - **Взаимодействие с физикой автомобиля**: Требуется использование RVOController.(https://arongranberg.com/astar/docs/rvocontroller.html)
    - **Учет поведения NPC**: Не совсем ясен смысл данного пункта.
 
    - **Масштабируемость**: Высокая. Код легко редактируется и расширяется, хотя в большинстве случаев это не потребуется, так как все необходимые функции уже реализованы.
@@ -22,8 +22,28 @@
 
 5. **Оптимизация**: Да, алгоритм оптимизирован. A* является предпочтительным выбором по соотношению простоты и производительности, в отличие от стандартного NavMesh в Unity, который менее эффективен. Оптимизация может быть дополнительно улучшена за счет изменения размера и плотности карты, а также частоты обновления.
 
-6. **Читабельность и расширяемость кода**: Требуется уточнение требований. Для простоты можно использовать архитектурные шаблоны типа MVP или ECS.
+6. **Читабельность и расширяемость кода**: Требуется уточнение требований. Для простоты можно использовать архитектурные шаблоны типа MVP или ECS (Предпочтительно DOTS если оптимизация играет **крайне большое** значение https://www.youtube.com/@ForgingStation)
 
 7. **Стабильность и предсказуемость ботов**: Да, система работает стабильно, при условии правильной настройки.
 
 8. **Адаптивность**: Данный пункт уже был рассмотрен ранее.
+
+Полезные ссылки:
+
+Boids: https://www.youtube.com/watch?v=bqtqltqcQhw
+
+Behavior trees: https://www.youtube.com/playlist?list=PLFQdM4LOGDr_vYJuo8YTRcmv3FrwczdKg
+
+Navigation:
+
+[1] https://webspace.science.uu.nl/~gerae101/UU_crowd_simulation_publications_multi_layered_navigation_mesh.html
+
+[2] https://webspace.science.uu.nl/~gerae101/UU_crowd_simulation_publications_dynamic_navigation_mesh.html
+
+[3] https://www.youtube.com/watch?v=49n6xEjDR-g
+
+[4] https://webspace.science.uu.nl/~gerae101/UU_crowd_simulation_publications_framework.html
+
+[5] https://ics.uu.nl/docs/vakken/mcrws/
+
+[6] https://www.youtube.com/watch?v=36W5j5Zr7-4 
