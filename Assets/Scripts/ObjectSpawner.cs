@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class ObjectSpawner : MonoBehaviour
 {
@@ -9,43 +9,33 @@ public class ObjectSpawner : MonoBehaviour
     public float spawnHeight = 1f;
     public float spawnRadius = 0.5f;
     public int maxAttempts = 50;
+    public int numberOfObjectsToSpawn = 10;
 
-    private List<GameObject> spawnedObjects = new List<GameObject>();
-
-    void Update()
+    void Start()
     {
-        if (Input.GetKeyDown(KeyCode.Equals)) // "+" key
-        {
-            SpawnObject();
-        }
-        else if (Input.GetKeyDown(KeyCode.Minus)) // "-" key
-        {
-            RemoveObject();
-        }
+        SpawnObjects();
     }
 
-    void SpawnObject()
+    void SpawnObjects()
     {
-        for (int attempt = 0; attempt < maxAttempts; attempt++)
-        {
-            Vector3 spawnPosition = GetRandomPosition();
+        int spawnedCount = 0;
 
-            if (IsValidSpawnPosition(spawnPosition))
+        for (int i = 0; i < numberOfObjectsToSpawn; i++)
+        {
+            for (int attempt = 0; attempt < maxAttempts; attempt++)
             {
-                GameObject newObj = Instantiate(objectToSpawn, spawnPosition, Quaternion.identity);
-                spawnedObjects.Add(newObj);
-                break;
-            }
-        }
-    }
+                Vector3 spawnPosition = GetRandomPosition();
 
-    void RemoveObject()
-    {
-        if (spawnedObjects.Count > 0)
-        {
-            GameObject lastObject = spawnedObjects[spawnedObjects.Count - 1];
-            spawnedObjects.RemoveAt(spawnedObjects.Count - 1);
-            Destroy(lastObject);
+                if (IsValidSpawnPosition(spawnPosition))
+                {
+                    GameObject npc = Instantiate(objectToSpawn, spawnPosition, Quaternion.identity);
+                    spawnedCount++;
+
+                    // Add spawned NPC to the global Reference list
+                    Reference.AddNPC(npc);
+                    break;
+                }
+            }
         }
     }
 
@@ -58,16 +48,42 @@ public class ObjectSpawner : MonoBehaviour
 
     bool IsValidSpawnPosition(Vector3 position)
     {
-        Collider[] colliders = Physics.OverlapSphere(position + new Vector3(0, spawnHeight, 0), spawnRadius);
-        return colliders.Length == 0;
+        Collider[] colliders = Physics.OverlapSphere(position += new Vector3(0, 1, 0), spawnRadius);
+        if (colliders.Length > 0)
+        {
+            return false;
+        }
+
+        return true; // If no collisions, spawn is valid
+    }
+}
+
+public static class Reference
+{
+    // Static list to store NPCs globally
+    public static List<GameObject> NPCs = new List<GameObject>();
+
+    // Method to add an NPC to the list
+    public static void AddNPC(GameObject npc)
+    {
+        if (!NPCs.Contains(npc))
+        {
+            NPCs.Add(npc);
+        }
     }
 
-    void OnDrawGizmosSelected()
+    // Method to remove an NPC from the list
+    public static void RemoveNPC(GameObject npc)
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(new Vector3(areaMin.x, spawnHeight, areaMin.y), new Vector3(areaMax.x, spawnHeight, areaMin.y));
-        Gizmos.DrawLine(new Vector3(areaMax.x, spawnHeight, areaMin.y), new Vector3(areaMax.x, spawnHeight, areaMax.y));
-        Gizmos.DrawLine(new Vector3(areaMax.x, spawnHeight, areaMax.y), new Vector3(areaMin.x, spawnHeight, areaMax.y));
-        Gizmos.DrawLine(new Vector3(areaMin.x, spawnHeight, areaMax.y), new Vector3(areaMin.x, spawnHeight, areaMin.y));
+        if (NPCs.Contains(npc))
+        {
+            NPCs.Remove(npc);
+        }
+    }
+
+    // Method to get all NPCs
+    public static List<GameObject> GetAllNPCs()
+    {
+        return NPCs;
     }
 }
