@@ -60,6 +60,16 @@ public class ObjectSpawner : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(position + new Vector3(0, spawnHeight,0), spawnRadius);
         return colliders.Length == 0;
     }
+
+    void OnDrawGizmosSelected()
+    {
+        // Рисуем границы области движения
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(new Vector3(areaMin.x, transform.position.y, areaMin.y), new Vector3(areaMax.x, transform.position.y, areaMin.y));
+        Gizmos.DrawLine(new Vector3(areaMax.x, transform.position.y, areaMin.y), new Vector3(areaMax.x, transform.position.y, areaMax.y));
+        Gizmos.DrawLine(new Vector3(areaMax.x, transform.position.y, areaMax.y), new Vector3(areaMin.x, transform.position.y, areaMax.y));
+        Gizmos.DrawLine(new Vector3(areaMin.x, transform.position.y, areaMax.y), new Vector3(areaMin.x, transform.position.y, areaMin.y));
+    }
 }
 
 public static class Reference
@@ -85,5 +95,9 @@ public static class Reference
     public static List<GameObject> GetAllNPCs()
     {
         return NPCs;
+    }
+    public static void ClearNPCList()
+    {
+        NPCs.Clear();
     }
 }

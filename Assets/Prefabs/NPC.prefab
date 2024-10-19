@@ -521,6 +521,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbb5b8e7747f6b14284f5afafb9f8d7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  areaMin: {x: -40, y: -40}
+  areaMax: {x: 750, y: 675}
+  spawnHeight: 20
+  spawnRadius: 10
+  maxAttempts: 50
 --- !u!1 &4605581239808464752
 GameObject:
   m_ObjectHideFlags: 0
