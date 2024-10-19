@@ -109,7 +109,12 @@ public class UIController : MonoBehaviour
 
         // Update debug text
         debugInfoText.text = $"FPS: {Mathf.Ceil(fps)}\n" +
-                             $"Active Seekers: {pathfindingComponents.Length}\n" +
-                             $"Average Path Computation Time: {averagePathDuration:F2} ms\n";
+                             $"Kол-во NPC: {pathfindingComponents.Length}\n" +
+                             $"Cреднее время просчета пути: {averagePathDuration:F2} ms\n";
+    }
+
+    public void Exit()
+    {
+        Application.Quit();
     }
 }

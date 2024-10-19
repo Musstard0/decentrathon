@@ -1,4 +1,6 @@
+using Pathfinding;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,16 +10,20 @@ public class NPCController : MonoBehaviour
     {
         Idle,
         Interacting,
-        PlayingAnimation,
         Waiting
     }
 
     public NPCState currentState = NPCState.Idle;
     public float wanderRadius = 10f;
     public float interactionRange = 2f;
-    public Animator animator;
     public Renderer npcRenderer;
-    public Text stateText;
+    public TextMeshProUGUI stateText;
+
+    public Vector2 areaMin = new Vector2(-10f, -10f);
+    public Vector2 areaMax = new Vector2(10f, -10f);
+    public float spawnHeight = 1f;
+    public float spawnRadius = 0.5f;
+    public int maxAttempts = 50;
 
     private Vector3 destination;
     private float actionTimer = 0f;
@@ -25,13 +31,16 @@ public class NPCController : MonoBehaviour
 
     private Color idleColor = Color.green;
     private Color interactingColor = Color.blue;
-    private Color playingAnimationColor = Color.yellow;
     private Color waitingColor = Color.red;
 
     void Start()
     {
         SetStateText();
         StartCoroutine(ActivityRoutine());
+
+        // √енераци€ первой случайной цели дл€ перемещени€
+        GenerateRandomPos();
+        InvokeRepeating("GenerateRandomPos", 0, 5);  // ѕериодическое обновление цели перемещени€
     }
 
     void Update()
@@ -50,6 +59,7 @@ public class NPCController : MonoBehaviour
     {
         while (true)
         {
+            yield return new WaitForSeconds(5);
             switch (currentState)
             {
                 case NPCState.Idle:
@@ -71,10 +81,6 @@ public class NPCController : MonoBehaviour
             actionTimer = Random.Range(5f, 10f);
             currentState = NPCState.Waiting;
         }
-        else if (Random.value < 0.1f)
-        {
-            StartCoroutine(PlayRandomAnimation());
-        }
     }
 
     private IEnumerator HandleInteractingState()
@@ -89,15 +95,9 @@ public class NPCController : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, destination) < 0.2f)
         {
-            SetNewWanderDestination();
+            GenerateRandomPos();
         }
         MoveToDestination();
-    }
-
-    private void SetNewWanderDestination()
-    {
-        Vector2 randomPoint = Random.insideUnitCircle * wanderRadius;
-        destination = new Vector3(randomPoint.x, transform.position.y, randomPoint.y) + transform.position;
     }
 
     private void MoveToDestination()
@@ -141,23 +141,6 @@ public class NPCController : MonoBehaviour
         target.rotation = Quaternion.LookRotation(-direction);
     }
 
-    private IEnumerator PlayRandomAnimation()
-    {
-        currentState = NPCState.PlayingAnimation;
-        SetStateText();
-        SetColor(playingAnimationColor);
-
-        AnimatorClipInfo[] clips = animator.GetCurrentAnimatorClipInfo(0);
-        string randomAnimation = clips[Random.Range(0, clips.Length)].clip.name;
-        animator.SetTrigger(randomAnimation);
-
-        yield return new WaitForSeconds(Random.Range(2f, 5f));
-
-        currentState = NPCState.Waiting;
-        SetStateText();
-        SetColor(waitingColor);
-    }
-
     private void UpdateWaitingState()
     {
         actionTimer -= Time.deltaTime;
@@ -177,5 +160,33 @@ public class NPCController : MonoBehaviour
     private void SetColor(Color color)
     {
         npcRenderer.material.color = color;
+    }
+
+    // Ћогика генерации случайных позиций
+    private void GenerateRandomPos()
+    {
+        for (int attempt = 0; attempt < maxAttempts; attempt++)
+        {
+            Vector3 spawnPosition = GetRandomPosition();
+
+            if (IsValidSpawnPosition(spawnPosition))
+            {
+                destination = spawnPosition;
+                break;
+            }
+        }
+    }
+
+    private Vector3 GetRandomPosition()
+    {
+        float randomX = Random.Range(areaMin.x, areaMax.x);
+        float randomZ = Random.Range(areaMin.y, areaMax.y);
+        return new Vector3(randomX, spawnHeight, randomZ);
+    }
+
+    private bool IsValidSpawnPosition(Vector3 position)
+    {
+        Collider[] colliders = Physics.OverlapSphere(position + new Vector3(0, spawnHeight, 0), spawnRadius);
+        return colliders.Length == 0;
     }
 }

@@ -459,9 +459,13 @@ MonoBehaviour:
   currentState: 0
   wanderRadius: 10
   interactionRange: 2
-  animator: {fileID: 0}
-  npcRenderer: {fileID: 0}
-  stateText: {fileID: 0}
+  npcRenderer: {fileID: 2162252298065803449}
+  stateText: {fileID: 7265172411168798424}
+  areaMin: {x: -40, y: -40}
+  areaMax: {x: 750, y: 675}
+  spawnHeight: 20
+  spawnRadius: 10
+  maxAttempts: 50
 --- !u!143 &2357426653357172538
 CharacterController:
   m_ObjectHideFlags: 0
