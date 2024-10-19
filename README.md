@@ -30,6 +30,12 @@
 
 Полезные ссылки:
 
+A*: 
+
+[1] https://arongranberg.com/astar/
+
+[2] https://youtu.be/46qZgd-T-hk
+
 Boids: https://www.youtube.com/watch?v=bqtqltqcQhw
 
 Behavior trees: https://www.youtube.com/playlist?list=PLFQdM4LOGDr_vYJuo8YTRcmv3FrwczdKg
