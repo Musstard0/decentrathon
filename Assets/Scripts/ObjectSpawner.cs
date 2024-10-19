@@ -9,33 +9,42 @@ public class ObjectSpawner : MonoBehaviour
     public float spawnHeight = 1f;
     public float spawnRadius = 0.5f;
     public int maxAttempts = 50;
-    public int numberOfObjectsToSpawn = 10;
 
-    void Start()
+    void Update()
     {
-        SpawnObjects();
+        if (Input.GetKeyDown(KeyCode.Plus) || Input.GetKeyDown(KeyCode.KeypadPlus))
+        {
+            SpawnObject();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Minus) || Input.GetKeyDown(KeyCode.KeypadMinus))
+        {
+            RemoveObject();
+        }
     }
 
-    void SpawnObjects()
+    void SpawnObject()
     {
-        int spawnedCount = 0;
-
-        for (int i = 0; i < numberOfObjectsToSpawn; i++)
+        for (int attempt = 0; attempt < maxAttempts; attempt++)
         {
-            for (int attempt = 0; attempt < maxAttempts; attempt++)
+            Vector3 spawnPosition = GetRandomPosition();
+
+            if (IsValidSpawnPosition(spawnPosition))
             {
-                Vector3 spawnPosition = GetRandomPosition();
-
-                if (IsValidSpawnPosition(spawnPosition))
-                {
-                    GameObject npc = Instantiate(objectToSpawn, spawnPosition, Quaternion.identity);
-                    spawnedCount++;
-
-                    // Add spawned NPC to the global Reference list
-                    Reference.AddNPC(npc);
-                    break;
-                }
+                GameObject npc = Instantiate(objectToSpawn, spawnPosition, Quaternion.identity);
+                Reference.AddNPC(npc);
+                break;
             }
+        }
+    }
+
+    void RemoveObject()
+    {
+        if (Reference.GetAllNPCs().Count > 0)
+        {
+            GameObject npcToRemove = Reference.GetAllNPCs()[Reference.GetAllNPCs().Count - 1];
+            Reference.RemoveNPC(npcToRemove);
+            Destroy(npcToRemove);
         }
     }
 
@@ -48,22 +57,15 @@ public class ObjectSpawner : MonoBehaviour
 
     bool IsValidSpawnPosition(Vector3 position)
     {
-        Collider[] colliders = Physics.OverlapSphere(position += new Vector3(0, 1, 0), spawnRadius);
-        if (colliders.Length > 0)
-        {
-            return false;
-        }
-
-        return true; // If no collisions, spawn is valid
+        Collider[] colliders = Physics.OverlapSphere(position + new Vector3(0, spawnHeight,0), spawnRadius);
+        return colliders.Length == 0;
     }
 }
 
 public static class Reference
 {
-    // Static list to store NPCs globally
     public static List<GameObject> NPCs = new List<GameObject>();
 
-    // Method to add an NPC to the list
     public static void AddNPC(GameObject npc)
     {
         if (!NPCs.Contains(npc))
@@ -72,7 +74,6 @@ public static class Reference
         }
     }
 
-    // Method to remove an NPC from the list
     public static void RemoveNPC(GameObject npc)
     {
         if (NPCs.Contains(npc))
@@ -81,7 +82,6 @@ public static class Reference
         }
     }
 
-    // Method to get all NPCs
     public static List<GameObject> GetAllNPCs()
     {
         return NPCs;
